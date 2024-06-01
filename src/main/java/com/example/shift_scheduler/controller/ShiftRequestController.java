@@ -27,10 +27,12 @@ public class ShiftRequestController {
     private UserService userService;
 
     @GetMapping("/request")
-    public String requestPage(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+    public String requestPage(@RequestParam Long userId, Model model) {
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
         return "request";
     }
+
 
     @PostMapping("/request")
     public String submitShiftRequest(@RequestParam Long userId, @RequestParam String date) {
@@ -50,4 +52,11 @@ public class ShiftRequestController {
         model.addAttribute("shiftRequests", shiftRequests);
         return "request_confirmation";
     }
+
+    @GetMapping("/request/select-user")
+    public String selectUserPage(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user_select";
+    }
+
 }

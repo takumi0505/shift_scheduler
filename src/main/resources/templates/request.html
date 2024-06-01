@@ -6,12 +6,9 @@
 <body>
 <h1>Shift Request</h1>
 
-<h2>Select User</h2>
-<form action="#" th:action="@{/shift/request}" method="post">
-    <label for="user">User:</label>
-    <select id="user" name="userId" required>
-        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
-    </select>
+<h2>Submit Shift Request for <span th:text="${user.name}"></span></h2>
+<form th:action="@{/shift/request}" method="post">
+    <input type="hidden" name="userId" th:value="${user.id}" />
 
     <label for="date">Date:</label>
     <input type="date" id="date" name="date" required>
