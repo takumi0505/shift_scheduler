@@ -5,7 +5,18 @@
 </head>
 <body>
 <h1>User Page</h1>
-<p>This is the user page.</p>
+
+<h2>Actions</h2>
+<ul>
+    <li><a th:href="@{/user/add}">Register User</a></li>
+    <li><a th:href="@{/user/delete}">Delete User</a></li>
+</ul>
+
+<h2>User List</h2>
+<ul>
+    <li th:each="user : ${users}" th:text="${user.name}"></li>
+</ul>
+
 <a th:href="@{/}">Back to Home</a>
 </body>
 </html>

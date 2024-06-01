@@ -22,12 +22,23 @@ public class UserController {
         return "user";
     }
 
+    @GetMapping("/user/add")
+    public String addUserPage() {
+        return "user_add";
+    }
+
     @PostMapping("/user/add")
     public String addUser(@RequestParam String name) {
         User user = new User();
         user.setName(name);
         userService.saveUser(user);
         return "redirect:/user";
+    }
+
+    @GetMapping("/user/delete")
+    public String deleteUserPage(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user_delete";
     }
 
     @PostMapping("/user/delete")

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register User</title>
+</head>
+<body>
+<h1>Register User</h1>
+
+<form action="#" th:action="@{/user/add}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <button type="submit">Add User</button>
+</form>
+
+<a th:href="@{/user}">Back to User Page</a>
+</body>
+</html>
