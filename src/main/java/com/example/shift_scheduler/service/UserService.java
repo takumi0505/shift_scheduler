@@ -27,7 +27,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public User getUserById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        return optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

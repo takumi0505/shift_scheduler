@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shift Request Confirmation</title>
+</head>
+<body>
+<h1>Shift Request Confirmation</h1>
+
+<h2>Shift Requests for <span th:text="${user.name}"></span></h2>
+<ul>
+    <li th:each="request : ${shiftRequests}" th:text="${request.date}"></li>
+</ul>
+
+<a th:href="@{/shift/request}">Back to Request Page</a>
+<a th:href="@{/}">Back to Home</a>
+</body>
+</html>

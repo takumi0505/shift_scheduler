@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Request Page</title>
+    <title>Shift Request</title>
 </head>
 <body>
-<h1>Request Page</h1>
-<p>This is the request page.</p>
+<h1>Shift Request</h1>
+
+<h2>Select User</h2>
+<form action="#" th:action="@{/shift/request}" method="post">
+    <label for="user">User:</label>
+    <select id="user" name="userId" required>
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+    </select>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+
+    <button type="submit">Submit Request</button>
+</form>
+
 <a th:href="@{/}">Back to Home</a>
 </body>
 </html>
