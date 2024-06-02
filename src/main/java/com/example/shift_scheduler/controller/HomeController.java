@@ -20,8 +20,5 @@ public class HomeController {
         return "request";
     }
 
-    @GetMapping("/manager")
-    public String managerPage(Model model) {
-        return "manager";
-    }
+    //ManagerControllerで定義したので消した
 }

@@ -5,6 +5,7 @@ import com.example.shift_scheduler.entity.ShiftRequest;
 import com.example.shift_scheduler.entity.User;
 import com.example.shift_scheduler.service.ShiftRequestService;
 import com.example.shift_scheduler.service.UserService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/shift")
@@ -41,8 +45,10 @@ public class ShiftRequestController {
         shiftRequest.setUser(user);
         shiftRequest.setDate(LocalDate.parse(date));
         shiftRequestService.saveShiftRequest(shiftRequest);
+        System.out.println("Shift request saved for user: " + user.getName() + " on date: " + date); // デバッグ用
         return "redirect:/shift/request/confirmation?userId=" + userId;
     }
+
 
     @GetMapping("/request/confirmation")
     public String confirmationPage(@RequestParam Long userId, Model model) {
@@ -58,5 +64,8 @@ public class ShiftRequestController {
         model.addAttribute("users", userService.getAllUsers());
         return "user_select";
     }
+
+
+
 
 }
