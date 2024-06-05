@@ -79,11 +79,9 @@ public class ShiftRequestController {
             ShiftRequest shiftRequest = shiftRequestService.getShiftRequestByUserAndDate(user, localDate);
             if (shiftRequest != null) {
                 shiftRequestService.deleteShiftRequest(shiftRequest);
-                response.put("success", true);
-            } else {
-                response.put("success", false);
-                response.put("message", "Shift request not found");
             }
+            // シフトリクエストが存在しない場合でも成功レスポンスを返す
+            response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", e.getMessage());
