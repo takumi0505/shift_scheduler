@@ -8,114 +8,96 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var selectedDates = [];
+    var calendarEl = document.getElementById('calendar');
+    var selectedDates = [];
+    var removedDates = [];
 
-            var events = /*[[${eventsJson}]]*/ '[]';  // デフォルト値を空の配列に設定
+    var events = /*[[${eventsJson}]]*/ '[]';
+    events = JSON.parse(events);
+    events.forEach(event => {
+        selectedDates.push(event.start);
+        event.id = event.start;  // 初期表示のイベントにもIDを設定
+    });
 
-            console.log("Events JSON from Thymeleaf: " + events);  // デバッグ用
+    console.log("Initial events: ", events);  // デバッグ用
 
-            // JSON文字列をJavaScriptオブジェクトに変換
-            events = JSON.parse(events);
-            events.forEach(event => selectedDates.push(event.start));  // 初期選択日付の追加
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ja',
+        selectable: true,
+        unselectAuto: false,
+        events: events,  // 初期表示のイベントを設定
+        select: function(info) {
+            var dateStr = info.startStr;
+            if (!selectedDates.includes(dateStr)) {
+                selectedDates.push(dateStr);
+                calendar.addEvent({
+                    id: dateStr,
+                    title: /*[[${user.name}]]*/ 'ユーザー名',
+                    start: dateStr,
+                    allDay: true
+                });
+                console.log("Event added with ID: " + dateStr);  // デバッグ用
+            }
+        },
+        eventContent: function(arg) {
+            var userName = arg.event.title;
+            var dateStr = arg.event.startStr;
+            var innerHtml = `
+                <div>
+                    ${userName}
+                    <button type="button" class="close-btn" data-date="${dateStr}">&times;</button>
+                </div>`;
+            return { html: innerHtml };
+        }
+    });
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'ja',
-                selectable: true,
-                unselectAuto: false,
-                events: events,
-                select: function(info) {
-                    var dateStr = info.startStr;
-                    if (selectedDates.includes(dateStr)) {
-                        selectedDates = selectedDates.filter(date => date !== dateStr);
-                        var event = calendar.getEventById(dateStr);
-                        if (event) {
-                            event.remove();
-                        }
-                        // サーバーに削除リクエストを送信
-                        fetch('/shift/request/delete', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ date: dateStr, userId: /*[[${user.id}]]*/ 0 })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                console.log("Event deleted successfully");
-                                // ページをリロード
-                                location.reload();
-                            } else {
-                                console.error("Failed to delete event: " + data.message);
-                            }
-                        }).catch(error => {
-                            console.error("Error deleting event: ", error);
-                        });
-                    } else {
-                        selectedDates.push(dateStr);
-                        calendar.addEvent({
-                            id: dateStr,
-                            title: /*[[${user.name}]]*/ 'ユーザー名',
-                            start: dateStr,
-                            allDay: true
-                        });
-                    }
+    calendar.render();
+
+    // 削除ボタンの動作を設定する
+    document.getElementById('calendar').addEventListener('click', function(event) {
+        if (event.target.classList.contains('close-btn')) {
+            var dateStr = event.target.getAttribute('data-date');
+            selectedDates = selectedDates.filter(date => date !== dateStr);
+            removedDates.push(dateStr);
+            var calendarEvent = calendar.getEventById(dateStr);
+            if (calendarEvent) {
+                console.log("Removing event with ID: " + dateStr);  // デバッグ用
+                calendarEvent.remove();
+                console.log("Event removed");  // デバッグ用
+            } else {
+                console.log("No event found with ID: " + dateStr);  // デバッグ用
+            }
+        }
+    });
+
+    document.getElementById('submit-button').addEventListener('click', function() {
+        var datesInput = document.getElementById('dates-input');
+        datesInput.value = selectedDates.join(',');
+
+        removedDates.forEach(dateStr => {
+            fetch('/shift/request/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                eventContent: function(arg) {
-                    var userName = arg.event.title;
-                    var dateStr = arg.event.startStr;
-                    var innerHtml = `
-                        <div>
-                            ${userName}
-                            <button type="button" class="close-btn" data-date="${dateStr}">&times;</button>
-                        </div>`;
-                    return { html: innerHtml };
+                body: JSON.stringify({ date: dateStr, userId: /*[[${user.id}]]*/ 0 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Event deleted successfully");
+                } else {
+                    console.error("Failed to delete event: " + data.message);
                 }
-            });
-
-            calendar.render();
-
-            document.getElementById('calendar').addEventListener('click', function(event) {
-                if (event.target.classList.contains('close-btn')) {
-                    var dateStr = event.target.getAttribute('data-date');
-                    selectedDates = selectedDates.filter(date => date !== dateStr);
-                    var calendarEvent = calendar.getEventById(dateStr);
-                    if (calendarEvent) {
-                        calendarEvent.remove();
-                    }
-                    // サーバーに削除リクエストを送信
-                    fetch('/shift/request/delete', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ date: dateStr, userId: /*[[${user.id}]]*/ 0 })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log("Event deleted successfully");
-                            // ページをリロード
-                            location.reload();
-                        } else {
-                            console.error("Failed to delete event: " + data.message);
-                        }
-                    }).catch(error => {
-                        console.error("Error deleting event: ", error);
-                    });
-                }
-            });
-
-            document.getElementById('submit-button').addEventListener('click', function() {
-                var datesInput = document.getElementById('dates-input');
-                datesInput.value = selectedDates.join(',');
+            }).catch(error => {
+                console.error("Error deleting event: ", error);
             });
         });
-        /*]]>*/
-    </script>
+    });
+});
 
+    </script>
 </head>
 <body>
 <h1><span th:text="${user.name}"></span>のシフト登録画面</h1>

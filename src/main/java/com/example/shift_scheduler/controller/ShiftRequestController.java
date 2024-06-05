@@ -52,12 +52,12 @@ public class ShiftRequestController {
 
         for (String dateStr : dateArray) {
             LocalDate date = LocalDate.parse(dateStr);
-            if (!shiftRequestService.isShiftRequestExist(user, date)) {
+            if (!shiftRequestService.isShiftRequestExist(user, date)) { // 修正部分: 二重登録を防ぐ
                 ShiftRequest shiftRequest = new ShiftRequest();
                 shiftRequest.setUser(user);
                 shiftRequest.setDate(date);
                 shiftRequestService.saveShiftRequest(shiftRequest);
-                System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr); // デバッグ用
+                System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr);
             }
         }
 
@@ -71,7 +71,6 @@ public class ShiftRequestController {
             Long userId = Long.parseLong(payload.get("userId"));
             String date = payload.get("date");
 
-            // ログを追加
             System.out.println("Received delete request for userId: " + userId + " and date: " + date);
 
             User user = userService.getUserById(userId);
@@ -80,7 +79,6 @@ public class ShiftRequestController {
             if (shiftRequest != null) {
                 shiftRequestService.deleteShiftRequest(shiftRequest);
             }
-            // シフトリクエストが存在しない場合でも成功レスポンスを返す
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
@@ -116,5 +114,4 @@ public class ShiftRequestController {
         }
         return response;
     }
-
 }

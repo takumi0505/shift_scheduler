@@ -42,5 +42,4 @@ public class ShiftRequestService {
     public void deleteAllShiftRequests() {
         shiftRequestRepository.deleteAll();
     }
-
 }
