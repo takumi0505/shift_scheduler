@@ -10,31 +10,99 @@
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var selectedDates = [];
-            var userName = /*[[${user.name}]]*/ 'ユーザー名';
+
+            var events = /*[[${eventsJson}]]*/ '[]';  // デフォルト値を空の配列に設定
+
+            console.log("Events JSON from Thymeleaf: " + events);  // デバッグ用
+
+            // JSON文字列をJavaScriptオブジェクトに変換
+            events = JSON.parse(events);
+            events.forEach(event => selectedDates.push(event.start));  // 初期選択日付の追加
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'ja',
                 selectable: true,
                 unselectAuto: false,
+                events: events,
                 select: function(info) {
                     var dateStr = info.startStr;
                     if (selectedDates.includes(dateStr)) {
                         selectedDates = selectedDates.filter(date => date !== dateStr);
-                        calendar.getEventById(dateStr).remove();
+                        var event = calendar.getEventById(dateStr);
+                        if (event) {
+                            event.remove();
+                        }
+                        // サーバーに削除リクエストを送信
+                        fetch('/shift/request/delete', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ date: dateStr, userId: /*[[${user.id}]]*/ 0 })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log("Event deleted successfully");
+                            } else {
+                                console.error("Failed to delete event: " + data.message);
+                            }
+                        }).catch(error => {
+                            console.error("Error deleting event: ", error);
+                        });
                     } else {
                         selectedDates.push(dateStr);
                         calendar.addEvent({
                             id: dateStr,
-                            title: userName,
+                            title: /*[[${user.name}]]*/ 'ユーザー名',
                             start: dateStr,
                             allDay: true
                         });
                     }
+                },
+                eventContent: function(arg) {
+                    var userName = arg.event.title;
+                    var dateStr = arg.event.startStr;
+                    var innerHtml = `
+                        <div>
+                            ${userName}
+                            <button type="button" class="close-btn" data-date="${dateStr}">&times;</button>
+                        </div>`;
+                    return { html: innerHtml };
                 }
             });
 
             calendar.render();
+
+            document.getElementById('calendar').addEventListener('click', function(event) {
+                if (event.target.classList.contains('close-btn')) {
+                    var dateStr = event.target.getAttribute('data-date');
+                    selectedDates = selectedDates.filter(date => date !== dateStr);
+                    var calendarEvent = calendar.getEventById(dateStr);
+                    if (calendarEvent) {
+                        calendarEvent.remove();
+                    }
+                    // サーバーに削除リクエストを送信
+                    fetch('/shift/request/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ date: dateStr, userId: /*[[${user.id}]]*/ 0 })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("Event deleted successfully");
+                        } else {
+                            console.error("Failed to delete event: " + data.message);
+                        }
+                    }).catch(error => {
+                        console.error("Error deleting event: ", error);
+                    });
+                }
+            });
 
             document.getElementById('submit-button').addEventListener('click', function() {
                 var datesInput = document.getElementById('dates-input');

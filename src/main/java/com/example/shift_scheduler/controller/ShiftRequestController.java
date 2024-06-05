@@ -1,6 +1,5 @@
 package com.example.shift_scheduler.controller;
 
-
 import com.example.shift_scheduler.entity.ShiftRequest;
 import com.example.shift_scheduler.entity.User;
 import com.example.shift_scheduler.service.ShiftRequestService;
@@ -9,10 +8,7 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,10 +29,21 @@ public class ShiftRequestController {
     @GetMapping
     public String requestPage(@RequestParam Long userId, Model model) {
         User user = userService.getUserById(userId);
+        List<ShiftRequest> shiftRequests = shiftRequestService.getAllShiftRequestsByUser(user);
+
+        List<Map<String, Object>> events = new ArrayList<>();
+        for (ShiftRequest request : shiftRequests) {
+            Map<String, Object> event = new HashMap<>();
+            event.put("title", user.getName());
+            event.put("start", request.getDate().toString());
+            events.add(event);
+        }
+
+        String eventsJson = new Gson().toJson(events);
         model.addAttribute("user", user);
+        model.addAttribute("eventsJson", eventsJson);
         return "request";
     }
-
 
     @PostMapping
     public String submitShiftRequest(@RequestParam Long userId, @RequestParam String dates) {
@@ -50,6 +57,33 @@ public class ShiftRequestController {
             System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr); // デバッグ用
         }
         return "redirect:/shift/request/confirmation?userId=" + userId;
+    }
+
+    @PostMapping("/delete")
+    public @ResponseBody Map<String, Object> deleteShiftRequest(@RequestBody Map<String, String> payload) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Long userId = Long.parseLong(payload.get("userId"));
+            String date = payload.get("date");
+
+            // ログを追加
+            System.out.println("Received delete request for userId: " + userId + " and date: " + date);
+
+            User user = userService.getUserById(userId);
+            LocalDate localDate = LocalDate.parse(date);
+            ShiftRequest shiftRequest = shiftRequestService.getShiftRequestByUserAndDate(user, localDate);
+            if (shiftRequest != null) {
+                shiftRequestService.deleteShiftRequest(shiftRequest);
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "Shift request not found");
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return response;
     }
 
     @GetMapping("/confirmation")
@@ -66,8 +100,4 @@ public class ShiftRequestController {
         model.addAttribute("users", userService.getAllUsers());
         return "user_select";
     }
-
-
-
-
 }
