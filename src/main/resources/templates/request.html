@@ -1,21 +1,116 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Shift Request</title>
+    <title>シフト希望登録</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js'></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var selectedDates = [];
+    var removedDates = [];
+
+    var events = /*[[${eventsJson}]]*/ '[]';
+    events = JSON.parse(events);
+    events.forEach(event => {
+        selectedDates.push(event.start);
+        event.id = event.start;  // 初期表示のイベントにもIDを設定
+    });
+
+    console.log("Initial events: ", events);  // デバッグ用
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ja',
+        selectable: true,
+        unselectAuto: false,
+        events: events,  // 初期表示のイベントを設定
+        select: function(info) {
+            var dateStr = info.startStr;
+            if (!selectedDates.includes(dateStr)) {
+                selectedDates.push(dateStr);
+                calendar.addEvent({
+                    id: dateStr,
+                    title: /*[[${user.name}]]*/ 'ユーザー名',
+                    start: dateStr,
+                    allDay: true
+                });
+                console.log("Event added with ID: " + dateStr);  // デバッグ用
+            }
+        },
+        eventContent: function(arg) {
+            var userName = arg.event.title;
+            var dateStr = arg.event.startStr;
+            var innerHtml = `
+                <div>
+                    ${userName}
+                    <button type="button" class="close-btn" data-date="${dateStr}">&times;</button>
+                </div>`;
+            return { html: innerHtml };
+        }
+    });
+
+    calendar.render();
+
+    // 削除ボタンの動作を設定する
+    document.getElementById('calendar').addEventListener('click', function(event) {
+        if (event.target.classList.contains('close-btn')) {
+            var dateStr = event.target.getAttribute('data-date');
+            selectedDates = selectedDates.filter(date => date !== dateStr);
+            removedDates.push(dateStr);
+            var calendarEvent = calendar.getEventById(dateStr);
+            if (calendarEvent) {
+                console.log("Removing event with ID: " + dateStr);  // デバッグ用
+                calendarEvent.remove();
+                console.log("Event removed");  // デバッグ用
+            } else {
+                console.log("No event found with ID: " + dateStr);  // デバッグ用
+            }
+        }
+    });
+
+    document.getElementById('submit-button').addEventListener('click', function() {
+        var datesInput = document.getElementById('dates-input');
+        datesInput.value = selectedDates.join(',');
+
+        removedDates.forEach(dateStr => {
+            fetch('/shift/request/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ date: dateStr, userId: /*[[${user.id}]]*/ 0 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Event deleted successfully");
+                } else {
+                    console.error("Failed to delete event: " + data.message);
+                }
+            }).catch(error => {
+                console.error("Error deleting event: ", error);
+            });
+        });
+    });
+});
+
+    </script>
 </head>
 <body>
-<h1>Shift Request</h1>
+<h1><span th:text="${user.name}"></span>のシフト登録画面</h1>
 
-<h2>Submit Shift Request for <span th:text="${user.name}"></span></h2>
 <form th:action="@{/shift/request}" method="post">
     <input type="hidden" name="userId" th:value="${user.id}" />
+    <input type="hidden" id="dates-input" name="dates" />
 
-    <label for="date">Date:</label>
-    <input type="date" id="date" name="date" required>
+    <div id='calendar'></div>
 
-    <button type="submit">Submit Request</button>
+    <button type="submit" id="submit-button">シフト提出</button>
 </form>
 
-<a th:href="@{/}">Back to Home</a>
+<a th:href="@{/}">ホームへ戻る</a>
 </body>
 </html>
