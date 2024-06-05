@@ -34,4 +34,13 @@ public class ShiftRequestService {
     public void deleteShiftRequest(ShiftRequest shiftRequest) {
         shiftRequestRepository.delete(shiftRequest);
     }
+
+    public boolean isShiftRequestExist(User user, LocalDate date) {
+        return shiftRequestRepository.findByUserAndDate(user, date) != null;
+    }
+
+    public void deleteAllShiftRequests() {
+        shiftRequestRepository.deleteAll();
+    }
+
 }

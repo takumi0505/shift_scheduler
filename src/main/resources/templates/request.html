@@ -45,6 +45,8 @@
                         .then(data => {
                             if (data.success) {
                                 console.log("Event deleted successfully");
+                                // ページをリロード
+                                location.reload();
                             } else {
                                 console.error("Failed to delete event: " + data.message);
                             }
@@ -95,6 +97,8 @@
                     .then(data => {
                         if (data.success) {
                             console.log("Event deleted successfully");
+                            // ページをリロード
+                            location.reload();
                         } else {
                             console.error("Failed to delete event: " + data.message);
                         }
@@ -111,6 +115,7 @@
         });
         /*]]>*/
     </script>
+
 </head>
 <body>
 <h1><span th:text="${user.name}"></span>のシフト登録画面</h1>

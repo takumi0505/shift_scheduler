@@ -49,13 +49,18 @@ public class ShiftRequestController {
     public String submitShiftRequest(@RequestParam Long userId, @RequestParam String dates) {
         User user = userService.getUserById(userId);
         String[] dateArray = dates.split(",");
+
         for (String dateStr : dateArray) {
-            ShiftRequest shiftRequest = new ShiftRequest();
-            shiftRequest.setUser(user);
-            shiftRequest.setDate(LocalDate.parse(dateStr));
-            shiftRequestService.saveShiftRequest(shiftRequest);
-            System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr); // デバッグ用
+            LocalDate date = LocalDate.parse(dateStr);
+            if (!shiftRequestService.isShiftRequestExist(user, date)) {
+                ShiftRequest shiftRequest = new ShiftRequest();
+                shiftRequest.setUser(user);
+                shiftRequest.setDate(date);
+                shiftRequestService.saveShiftRequest(shiftRequest);
+                System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr); // デバッグ用
+            }
         }
+
         return "redirect:/shift/request/confirmation?userId=" + userId;
     }
 
@@ -100,4 +105,18 @@ public class ShiftRequestController {
         model.addAttribute("users", userService.getAllUsers());
         return "user_select";
     }
+
+    @PostMapping("/deleteAll")
+    public @ResponseBody Map<String, Object> deleteAllShiftRequests() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            shiftRequestService.deleteAllShiftRequests();
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return response;
+    }
+
 }
