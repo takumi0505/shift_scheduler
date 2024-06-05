@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/shift")
+@RequestMapping("/shift/request")
 public class ShiftRequestController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class ShiftRequestController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/request")
+    @GetMapping
     public String requestPage(@RequestParam Long userId, Model model) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
@@ -38,19 +38,21 @@ public class ShiftRequestController {
     }
 
 
-    @PostMapping("/request")
-    public String submitShiftRequest(@RequestParam Long userId, @RequestParam String date) {
+    @PostMapping
+    public String submitShiftRequest(@RequestParam Long userId, @RequestParam String dates) {
         User user = userService.getUserById(userId);
-        ShiftRequest shiftRequest = new ShiftRequest();
-        shiftRequest.setUser(user);
-        shiftRequest.setDate(LocalDate.parse(date));
-        shiftRequestService.saveShiftRequest(shiftRequest);
-        System.out.println("Shift request saved for user: " + user.getName() + " on date: " + date); // デバッグ用
+        String[] dateArray = dates.split(",");
+        for (String dateStr : dateArray) {
+            ShiftRequest shiftRequest = new ShiftRequest();
+            shiftRequest.setUser(user);
+            shiftRequest.setDate(LocalDate.parse(dateStr));
+            shiftRequestService.saveShiftRequest(shiftRequest);
+            System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr); // デバッグ用
+        }
         return "redirect:/shift/request/confirmation?userId=" + userId;
     }
 
-
-    @GetMapping("/request/confirmation")
+    @GetMapping("/confirmation")
     public String confirmationPage(@RequestParam Long userId, Model model) {
         User user = userService.getUserById(userId);
         List<ShiftRequest> shiftRequests = shiftRequestService.getAllShiftRequestsByUser(user);
@@ -59,7 +61,7 @@ public class ShiftRequestController {
         return "request_confirmation";
     }
 
-    @GetMapping("/request/select-user")
+    @GetMapping("/user_select")
     public String selectUserPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         return "user_select";
