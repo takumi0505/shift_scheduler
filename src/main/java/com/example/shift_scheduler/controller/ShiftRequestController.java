@@ -36,6 +36,7 @@ public class ShiftRequestController {
             Map<String, Object> event = new HashMap<>();
             event.put("title", user.getName());
             event.put("start", request.getDate().toString());
+            event.put("color", user.getColor());  // ユーザーの色を追加
             events.add(event);
         }
 

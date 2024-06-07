@@ -16,11 +16,21 @@
             var removedDates = [];
 
             var events = /*[[${eventsJson}]]*/ '[]';
-            events = JSON.parse(events);
+            try {
+                events = JSON.parse(events);
+            } catch (e) {
+                console.error("Error parsing events JSON", e);
+            }
+
             events.forEach(event => {
                 selectedDates.push(event.start);
                 event.id = event.start;  // 初期表示のイベントにもIDを設定
-                event.color = event.user.color; // ユーザーの色を設定
+                // ユーザーの色を直接設定
+                if (event.color) {
+                    event.color = event.color;
+                } else {
+                    event.color = '#0000FF'; // デフォルトの色を設定
+                }
             });
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
