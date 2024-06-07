@@ -1,6 +1,5 @@
 package com.example.shift_scheduler.controller;
 
-
 import com.example.shift_scheduler.entity.User;
 import com.example.shift_scheduler.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,12 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public String addUser(@RequestParam String name) {
+    public String addUser(@RequestParam String name, Model model) {
         User user = new User();
         user.setName(name);
         userService.saveUser(user);
-        return "redirect:/user";
+        model.addAttribute("user", user);
+        return "user_registered";
     }
 
     @GetMapping("/user/delete")
@@ -42,8 +42,10 @@ public class UserController {
     }
 
     @PostMapping("/user/delete")
-    public String deleteUser(@RequestParam Long id) {
+    public String deleteUser(@RequestParam Long id, Model model) {
+        User user = userService.getUserById(id);
         userService.deleteUser(id);
-        return "redirect:/user";
+        model.addAttribute("user", user);
+        return "user_deleted";
     }
 }
