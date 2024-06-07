@@ -20,6 +20,7 @@
             events.forEach(event => {
                 selectedDates.push(event.start);
                 event.id = event.start;  // 初期表示のイベントにもIDを設定
+                event.color = event.user.color; // ユーザーの色を設定
             });
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -36,7 +37,8 @@
                             id: dateStr,
                             title: /*[[${user.name}]]*/ 'ユーザー名',
                             start: dateStr,
-                            allDay: true
+                            allDay: true,
+                            color: /*[[${user.color}]]*/ '#0000FF'  // ユーザーの色を設定
                         });
                     }
                 },
