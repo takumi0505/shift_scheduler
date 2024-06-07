@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Select User</title>
+    <title>ユーザー選択</title>
 </head>
 <body>
-<h1>Select User</h1>
+<h1>ユーザー選択</h1>
 
 <form th:action="@{/shift/request}" method="get">
     <label for="user">User:</label>
     <select id="user" name="userId" required>
         <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
     </select>
-    <button type="submit">Select User</button>
+    <button type="submit">選択</button>
 </form>
 
-<a th:href="@{/}">Back to Home</a>
+<a th:href="@{/}">ホームへ戻る</a>
 </body>
 </html>
