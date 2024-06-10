@@ -8,6 +8,39 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js'></script>
+    <style>
+        .fc-event {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+            height: auto !important; /* イベントの高さを自動にする */
+            font-size: 16px; /* 文字サイズを調整 */
+        }
+
+        .fc-event .fc-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .delete-btn {
+            background: none;
+            color: #FFFFFF; /* テキストの色を白に設定 */
+            border: none;
+            padding: 0 5px; /* パディングを調整 */
+            font-size: 20px;
+            font-weight: bold; /* テキストを太字に設定 */
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 10px; /* 左の余白を追加して見やすくする */
+        }
+
+        .delete-btn:hover {
+            color: #FF0000; /* ホバー時の色を赤に設定 */
+        }
+    </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener('DOMContentLoaded', function() {
@@ -16,10 +49,21 @@
             var removedDates = [];
 
             var events = /*[[${eventsJson}]]*/ '[]';
-            events = JSON.parse(events);
+            try {
+                events = JSON.parse(events);
+            } catch (e) {
+                console.error("Error parsing events JSON", e);
+            }
+
             events.forEach(event => {
                 selectedDates.push(event.start);
                 event.id = event.start;  // 初期表示のイベントにもIDを設定
+                // ユーザーの色を直接設定
+                if (event.color) {
+                    event.color = event.color;
+                } else {
+                    event.color = '#0000FF'; // デフォルトの色を設定
+                }
             });
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -36,7 +80,8 @@
                             id: dateStr,
                             title: /*[[${user.name}]]*/ 'ユーザー名',
                             start: dateStr,
-                            allDay: true
+                            allDay: true,
+                            color: /*[[${user.color}]]*/ '#0000FF'  // ユーザーの色を設定
                         });
                     }
                 },
@@ -45,8 +90,8 @@
                     var dateStr = arg.event.startStr;
                     var innerHtml = `
                         <div>
-                            ${userName}
-                            <button type="button" class="close-btn text-red-500 ml-2" data-date="${dateStr}">&times;</button>
+                            <span class="fc-title">${userName}</span>
+                            <button type="button" class="delete-btn" data-date="${dateStr}">×</button>
                         </div>`;
                     return { html: innerHtml };
                 }
@@ -56,7 +101,7 @@
 
             // 削除ボタンの動作を設定する
             document.getElementById('calendar').addEventListener('click', function(event) {
-                if (event.target.classList.contains('close-btn')) {
+                if (event.target.classList.contains('delete-btn')) {
                     var dateStr = event.target.getAttribute('data-date');
                     selectedDates = selectedDates.filter(date => date !== dateStr);
                     removedDates.push(dateStr);

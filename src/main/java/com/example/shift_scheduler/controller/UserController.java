@@ -31,8 +31,8 @@ public class UserController {
         User user = new User();
         user.setName(name);
         userService.saveUser(user);
-        model.addAttribute("user", user);
-        return "user_registered";
+        model.addAttribute("user", user);  // ユーザー情報をモデルに追加
+        return "user_registered";  // 完了ページにリダイレクト
     }
 
     @GetMapping("/user/delete")
@@ -43,9 +43,9 @@ public class UserController {
 
     @PostMapping("/user/delete")
     public String deleteUser(@RequestParam Long id, Model model) {
-        User user = userService.getUserById(id);
+        User user = userService.getUserById(id);  // 削除されるユーザー情報を取得
         userService.deleteUser(id);
-        model.addAttribute("user", user);
-        return "user_deleted";
+        model.addAttribute("user", user);  // ユーザー情報をモデルに追加
+        return "user_deleted";  // 完了ページにリダイレクト
     }
 }

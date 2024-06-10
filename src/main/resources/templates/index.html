@@ -18,14 +18,18 @@
     </div>
 </nav>
 <div class="container mx-auto mt-8 px-4">
-    <h1 class="text-3xl font-bold text-gray-800 mb-4">シフト作成ホーム</h1>
-    <nav>
-        <ul class="space-y-2">
-            <li><a th:href="@{/user}" class="text-lg text-blue-600 hover:underline">ユーザー登録・削除</a></li>
-            <li><a th:href="@{/shift/request/user_select}" class="text-lg text-blue-600 hover:underline">シフト希望登録</a></li>
-            <li><a th:href="@{/manager}" class="text-lg text-blue-600 hover:underline">管理者ページ</a></li>
-        </ul>
-    </nav>
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">シフト作成ホーム</h1>
+    <div class="flex justify-center space-x-4">
+        <a th:href="@{/user}" class="flex-1 max-w-sm p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition duration-300 ease-in-out">
+            <h2 class="text-xl font-bold text-gray-800 text-center">ユーザー管理</h2>
+        </a>
+        <a th:href="@{/shift/request/user_select}" class="flex-1 max-w-sm p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition duration-300 ease-in-out">
+            <h2 class="text-xl font-bold text-gray-800 text-center">シフト希望登録</h2>
+        </a>
+        <a th:href="@{/manager}" class="flex-1 max-w-sm p-6 bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300 transition duration-300 ease-in-out">
+            <h2 class="text-xl font-bold text-gray-800 text-center">管理者ページ</h2>
+        </a>
+    </div>
 </div>
 </body>
 </html>

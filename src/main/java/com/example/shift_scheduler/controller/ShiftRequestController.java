@@ -36,6 +36,7 @@ public class ShiftRequestController {
             Map<String, Object> event = new HashMap<>();
             event.put("title", user.getName());
             event.put("start", request.getDate().toString());
+            event.put("color", user.getColor());  // ユーザーの色を追加
             events.add(event);
         }
 
@@ -46,8 +47,16 @@ public class ShiftRequestController {
     }
 
     @PostMapping
-    public String submitShiftRequest(@RequestParam Long userId, @RequestParam String dates) {
+    public String submitShiftRequest(@RequestParam Long userId, @RequestParam String dates, Model model) {
         User user = userService.getUserById(userId);
+
+        // シフトが選択されていない場合の処理
+        if (dates.isEmpty()) {
+            model.addAttribute("user", user);
+            model.addAttribute("shiftRequests", new ArrayList<ShiftRequest>());
+            return "redirect:/shift/request/confirmation?userId=" + userId + "&noShifts=true";
+        }
+
         String[] dateArray = dates.split(",");
 
         for (String dateStr : dateArray) {
@@ -88,11 +97,12 @@ public class ShiftRequestController {
     }
 
     @GetMapping("/confirmation")
-    public String confirmationPage(@RequestParam Long userId, Model model) {
+    public String confirmationPage(@RequestParam Long userId, @RequestParam(required = false) boolean noShifts, Model model) {
         User user = userService.getUserById(userId);
         List<ShiftRequest> shiftRequests = shiftRequestService.getAllShiftRequestsByUser(user);
         model.addAttribute("user", user);
         model.addAttribute("shiftRequests", shiftRequests);
+        model.addAttribute("noShifts", noShifts);
         return "request_confirmation";
     }
 
