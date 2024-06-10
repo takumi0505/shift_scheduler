@@ -36,6 +36,7 @@ public class ManagerController {
             Map<String, Object> event = new HashMap<>();
             event.put("title", request.getUser().getName());
             event.put("start", request.getDate().toString());
+            event.put("color", request.getUser().getColor());  // ユーザーの色を追加
             events.add(event);
         }
 
