@@ -1,0 +1,16 @@
+.home-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: #1D4ED8; /* Tailwind CSS の bg-blue-600 */
+    color: white;
+    padding: 0.5rem; /* Tailwind CSS の py-2 */
+    border-radius: 0.375rem; /* Tailwind CSS の rounded */
+    text-decoration: none;
+    margin-top: 1.5rem; /* Tailwind CSS の mt-6 */
+    transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+    background-color: #1E40AF; /* Tailwind CSS の hover:bg-blue-700 */
+}

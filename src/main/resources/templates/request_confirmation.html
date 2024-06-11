@@ -1,22 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>シフト登録完了画面</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+
+<head th:replace="fragments/head :: head('シフト登録完了画面')"></head>
+
 <body class="bg-gray-100">
-<nav class="bg-white shadow-md">
-    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-        <div class="text-2xl font-bold text-gray-800">シフト管理アプリ</div>
-        <ul class="flex space-x-4">
-            <li><a th:href="@{/user}" class="text-gray-800 hover:text-gray-600">ユーザー登録・削除</a></li>
-            <li><a th:href="@{/shift/request/user_select}" class="text-gray-800 hover:text-gray-600">シフト希望登録</a></li>
-            <li><a th:href="@{/manager}" class="text-gray-800 hover:text-gray-600">管理者ページ</a></li>
-        </ul>
-    </div>
-</nav>
+
+<nav th:replace="fragments/nav :: nav"></nav>
+
 <div class="container mx-auto mt-8 px-4">
     <h1 class="text-3xl font-bold text-gray-800 mb-4">シフト登録完了</h1>
     <h2 class="text-2xl font-semibold text-gray-800 mb-4"><span th:text="${user.name}"></span>のシフト登録が完了しました！</h2>
