@@ -7,18 +7,36 @@
 
 <nav th:replace="fragments/nav :: nav"></nav>
 
-<div class="container mx-auto mt-8 px-4">
+<div class="container mx-auto mt-8 px-4 text-center">
     <h1 class="text-3xl font-bold text-gray-800 mb-4">ユーザー削除</h1>
-    <form action="#" th:action="@{/user/delete}" method="post" class="bg-white p-6 rounded shadow-md">
+    <form action="#" th:action="@{/user/delete}" method="post" class="bg-white p-6 rounded shadow-md mx-auto" style="max-width: 60%;">
         <div class="mb-4">
             <label for="id" class="block text-lg text-gray-700 mb-2">Select User:</label>
-            <select id="id" name="id" required class="w-full px-3 py-2 border rounded">
-                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
-            </select>
+            <div class="relative">
+                <select id="id" name="id" required class="w-full px-3 py-2 border rounded text-center appearance-none">
+                    <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M7 10l5 5 5-5H7z" />
+                    </svg>
+                </div>
+            </div>
         </div>
         <button type="submit" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">削除</button>
     </form>
-    <a th:href="@{/}" class="text-lg text-blue-600 hover:underline mt-6 block">ホームへ戻る</a>
+    <a th:href="@{/}" class="btn mt-6 ">ホームへ戻る</a>
 </div>
+
+<style>
+    select {
+        text-align: center;
+        text-align-last: center;
+    }
+    option {
+        text-align: center;
+    }
+</style>
+
 </body>
 </html>

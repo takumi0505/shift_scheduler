@@ -1,16 +1,24 @@
-.home-button {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background-color: #1D4ED8; /* Tailwind CSS の bg-blue-600 */
-    color: white;
-    padding: 0.5rem; /* Tailwind CSS の py-2 */
-    border-radius: 0.375rem; /* Tailwind CSS の rounded */
-    text-decoration: none;
-    margin-top: 1.5rem; /* Tailwind CSS の mt-6 */
-    transition: background-color 0.3s ease;
+.btn {
+    display: inline-block;
+    padding: 10px 20px; /* ボタン内の余白 */
+    margin: 10px 0; /* 上下の余白 */
+    font-size: 16px !important; /* 文字サイズ */
+    font-weight: bold; /* 文字の太さ */
+    text-align: center; /* 文字を中央揃え */
+    text-decoration: none; /* 下線を消す */
+    color: #FFFFFF !important; /* テキストの色 */
+    background-color: #6B7280 !important; /* 背景色をグレーに設定 */
+    border: none; /* ボーダーを消す */
+    border-radius: 5px; /* 角を丸くする */
+    cursor: pointer; /* カーソルをポインタにする */
+    transition: background-color 0.3s ease; /* ホバー時の背景色変更をスムーズにする */
 }
 
-.home-button:hover {
-    background-color: #1E40AF; /* Tailwind CSS の hover:bg-blue-700 */
+.btn:hover {
+    background-color: #4B5563 !important; /* ホバー時の背景色を濃いグレーに設定 */
+}
+
+.center-btn {
+    display: flex;
+    justify-content: center;
 }

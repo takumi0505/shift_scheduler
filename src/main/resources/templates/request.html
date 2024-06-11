@@ -2,42 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="fragments/head :: head('シフト希望登録')"></div>
+    <link rel="stylesheet" href="/static/deleteButton.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css' rel='stylesheet' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js'></script>
-    <style>
-        .fc-event {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 5px;
-            height: auto !important; /* イベントの高さを自動にする */
-            font-size: 16px; /* 文字サイズを調整 */
-        }
 
-        .fc-event .fc-title {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
-        }
 
-        .delete-btn {
-            background: none;
-            color: #FFFFFF; /* テキストの色を白に設定 */
-            border: none;
-            padding: 0 5px; /* パディングを調整 */
-            font-size: 20px;
-            font-weight: bold; /* テキストを太字に設定 */
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 10px; /* 左の余白を追加して見やすくする */
-        }
-
-        .delete-btn:hover {
-            color: #FF0000; /* ホバー時の色を赤に設定 */
-        }
-    </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener('DOMContentLoaded', function() {
@@ -141,7 +111,8 @@
 
 <nav th:replace="fragments/nav :: nav"></nav>
 
-<div class="container mx-auto mt-8 px-4">
+<div class="container mx-auto mt-8 px-4 text-center">
+
     <h1 class="text-3xl font-bold text-gray-800 mb-4"><span th:text="${user.name}"></span>のシフト登録画面</h1>
     <form th:action="@{/shift/request}" method="post" class="bg-white p-6 rounded shadow-md">
         <input type="hidden" name="userId" th:value="${user.id}" />
@@ -151,7 +122,7 @@
 
         <button type="submit" id="submit-button" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">シフト提出</button>
     </form>
-    <a th:href="@{/}" class="text-lg text-blue-600 hover:underline mt-6 block">ホームへ戻る</a>
+    <a th:href="@{/}" class="btn mt-6 ">ホームへ戻る</a>
 </div>
 </body>
 </html>

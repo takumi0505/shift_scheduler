@@ -3,27 +3,29 @@
 
 <head th:replace="fragments/head :: head('ユーザー管理')"></head>
 
-
 <body class="bg-gray-100">
 
 <nav th:replace="fragments/nav :: nav"></nav>
 
-<div class="container mx-auto mt-8 px-4">
-    <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">ユーザー管理</h1>
+<div class="container mx-auto mt-8 px-4 text-center">
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 ">ユーザー管理</h1>
     <div class="flex justify-center space-x-4 mb-6">
         <a th:href="@{/user/add}" class="block p-6 max-w-sm bg-blue-500 text-white rounded-lg border border-gray-200 shadow-md hover:bg-blue-600 transition duration-300 ease-in-out">
-            <h2 class="text-xl font-bold text-center">登録</h2>
+            <h2 class="text-xl font-bold ">登録</h2>
         </a>
         <a th:href="@{/user/delete}" class="block p-6 max-w-sm bg-red-500 text-white rounded-lg border border-gray-200 shadow-md hover:bg-red-600 transition duration-300 ease-in-out">
-            <h2 class="text-xl font-bold text-center">削除</h2>
+            <h2 class="text-xl font-bold ">削除</h2>
         </a>
     </div>
-    <div class="text-center">
+    <div >
         <h2 class="text-2xl font-semibold text-gray-800 mb-2">ユーザー一覧</h2>
         <ul class="inline-block text-left">
             <li th:each="user : ${users}" class="text-lg text-gray-700 p-2 bg-white rounded-lg shadow-md mb-2" th:text="${user.name}"></li>
         </ul>
-        <a th:href="@{/}" class="text-lg text-blue-600 hover:underline mt-6 block">ホームへ戻る</a>
+        <div class="center-btn mt-6">
+            <a th:href="@{/}" class="btn">ホームへ戻る</a>
+        </div>
     </div>
 </div>
 </body>
