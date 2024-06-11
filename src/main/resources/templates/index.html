@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>シフト作成ホーム</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+
+<head th:replace="fragments/head :: head('シフト作成ホーム')"></head>
+
 <body class="bg-gray-100">
 <nav class="bg-white shadow-md">
     <div class="container mx-auto px-4 py-2 flex justify-between items-center">
@@ -19,7 +16,6 @@
         </ul>
     </div>
 </nav>
-
 
 <div class="container mx-auto mt-8 px-4">
     <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">シフト作成ホーム</h1>
@@ -37,3 +33,4 @@
 </div>
 </body>
 </html>
+
