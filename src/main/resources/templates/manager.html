@@ -3,7 +3,28 @@
 <head>
     <div th:replace="fragments/head :: head('管理者ページ')"></div>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
+    <style>
+        /* ドロップダウンメニューを大きくし、文字を中央に配置 */
+        #user-select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+        }
+        #user-select option {
+            text-align: center;
+        }
+        /* カレンダーのスタイル調整 */
+        #calendar {
+            width: 100%;
+            height: auto;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js"></script>
     <script th:inline="javascript">
@@ -31,6 +52,17 @@
             });
 
             calendar.render();
+
+            // ユーザー選択用のドロップダウンメニュー
+            var userSelect = document.getElementById('user-select');
+            userSelect.addEventListener('change', function() {
+                var selectedUserId = userSelect.value;
+                var filteredEvents = events.filter(function(event) {
+                    return !selectedUserId || event.userId == selectedUserId;
+                });
+                calendar.removeAllEvents();
+                calendar.addEventSource(filteredEvents);
+            });
         });
         /*]]>*/
     </script>
@@ -42,10 +74,18 @@
 <div class="container mx-auto mt-8 px-4 text-center">
 
     <h1 class="text-3xl font-bold text-gray-800 mb-4">シフト作成者ページ</h1>
+
+    <div class="mb-4">
+        <label for="user-select" class="block text-lg font-medium text-gray-700 mb-2">ユーザーを選択:</label>
+        <select id="user-select" class="block w-full border border-gray-300 rounded-md">
+            <option value="">全ユーザー</option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+        </select>
+    </div>
+
     <div id='calendar' class="bg-white p-6 rounded shadow-md mb-4"></div>
     <a th:href="@{/}" class="btn mt-6 ">ホームへ戻る</a>
 </div>
-
 
 </body>
 </html>

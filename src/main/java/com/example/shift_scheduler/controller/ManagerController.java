@@ -1,7 +1,9 @@
 package com.example.shift_scheduler.controller;
 
 import com.example.shift_scheduler.entity.ShiftRequest;
+import com.example.shift_scheduler.entity.User;
 import com.example.shift_scheduler.service.ShiftRequestService;
+import com.example.shift_scheduler.service.UserService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,9 @@ public class ManagerController {
     @Autowired
     private ShiftRequestService shiftRequestService;
 
+    @Autowired
+    private UserService userService;  // 追加
+
     @GetMapping
     public String managerPage(Model model) {
         List<ShiftRequest> shiftRequests = shiftRequestService.getAllShiftRequests();
@@ -37,12 +42,16 @@ public class ManagerController {
             event.put("title", request.getUser().getName());
             event.put("start", request.getDate().toString());
             event.put("color", request.getUser().getColor());  // ユーザーの色を追加
+            event.put("userId", request.getUser().getId());  // ユーザーIDを追加
             events.add(event);
         }
 
+        List<User> users = userService.getAllUsers();  // 全ユーザーを取得
         String eventsJson = new Gson().toJson(events);
         System.out.println("Generated JSON: " + eventsJson);  // デバッグ用
+
         model.addAttribute("eventsJson", eventsJson);
+        model.addAttribute("users", users);  // ユーザーリストをモデルに追加
         return "manager";
     }
 }
