@@ -24,7 +24,7 @@ public class ManagerController {
     private ShiftRequestService shiftRequestService;
 
     @Autowired
-    private UserService userService;  // 追加
+    private UserService userService;
 
     @GetMapping
     public String managerPage(Model model) {
@@ -41,17 +41,18 @@ public class ManagerController {
             Map<String, Object> event = new HashMap<>();
             event.put("title", request.getUser().getName());
             event.put("start", request.getDate().toString());
-            event.put("color", request.getUser().getColor());  // ユーザーの色を追加
+            event.put("color", request.getUser().getColor());
             event.put("userId", request.getUser().getId());  // ユーザーIDを追加
             events.add(event);
         }
 
-        List<User> users = userService.getAllUsers();  // 全ユーザーを取得
         String eventsJson = new Gson().toJson(events);
         System.out.println("Generated JSON: " + eventsJson);  // デバッグ用
-
         model.addAttribute("eventsJson", eventsJson);
+
+        List<User> users = userService.getAllUsers();  // 全ユーザーを取得
         model.addAttribute("users", users);  // ユーザーリストをモデルに追加
+
         return "manager";
     }
 }
