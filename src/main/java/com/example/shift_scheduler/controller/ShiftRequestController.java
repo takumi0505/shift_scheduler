@@ -52,21 +52,17 @@ public class ShiftRequestController {
 
         // シフトが選択されていない場合の処理
         if (dates.isEmpty()) {
-            model.addAttribute("user", user);
-            model.addAttribute("shiftRequests", new ArrayList<ShiftRequest>());
             return "redirect:/shift/request/confirmation?userId=" + userId + "&noShifts=true";
         }
 
         String[] dateArray = dates.split(",");
-
         for (String dateStr : dateArray) {
             LocalDate date = LocalDate.parse(dateStr);
-            if (!shiftRequestService.isShiftRequestExist(user, date)) { // 修正部分: 二重登録を防ぐ
+            if (!shiftRequestService.isShiftRequestExist(user, date)) {
                 ShiftRequest shiftRequest = new ShiftRequest();
                 shiftRequest.setUser(user);
                 shiftRequest.setDate(date);
                 shiftRequestService.saveShiftRequest(shiftRequest);
-                System.out.println("Shift request saved for user: " + user.getName() + " on date: " + dateStr);
             }
         }
 
@@ -100,9 +96,23 @@ public class ShiftRequestController {
     public String confirmationPage(@RequestParam Long userId, @RequestParam(required = false) boolean noShifts, Model model) {
         User user = userService.getUserById(userId);
         List<ShiftRequest> shiftRequests = shiftRequestService.getAllShiftRequestsByUser(user);
+
+        List<Map<String, Object>> events = new ArrayList<>();
+        for (ShiftRequest request : shiftRequests) {
+            Map<String, Object> event = new HashMap<>();
+            event.put("title", user.getName());
+            event.put("start", request.getDate().toString());
+            event.put("color", user.getColor());
+            events.add(event);
+        }
+
+        String eventsJson = new Gson().toJson(events);
+
         model.addAttribute("user", user);
         model.addAttribute("shiftRequests", shiftRequests);
         model.addAttribute("noShifts", noShifts);
+        model.addAttribute("eventsJson", eventsJson);
+
         return "request_confirmation";
     }
 
