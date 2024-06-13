@@ -113,13 +113,13 @@ public class ShiftRequestController {
         model.addAttribute("noShifts", noShifts);
         model.addAttribute("eventsJson", eventsJson);
 
-        return "request_confirmation";
+        return "requestConfirmation";
     }
 
-    @GetMapping("/user_select")
+    @GetMapping("/userSelect")
     public String selectUserPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "user_select";
+        return "userSelect";
     }
 
     @PostMapping("/deleteAll")

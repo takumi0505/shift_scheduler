@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping("/user/add")
     public String addUserPage() {
-        return "user_add";
+        return "userAdd";
     }
 
     @PostMapping("/user/add")
@@ -32,13 +32,13 @@ public class UserController {
         user.setName(name);
         userService.saveUser(user);
         model.addAttribute("user", user);  // ユーザー情報をモデルに追加
-        return "user_registered";  // 完了ページにリダイレクト
+        return "userRegistered";  // 完了ページにリダイレクト
     }
 
     @GetMapping("/user/delete")
     public String deleteUserPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "user_delete";
+        return "userDelete";
     }
 
     @PostMapping("/user/delete")
@@ -46,6 +46,6 @@ public class UserController {
         User user = userService.getUserById(id);  // 削除されるユーザー情報を取得
         userService.deleteUser(id);
         model.addAttribute("user", user);  // ユーザー情報をモデルに追加
-        return "user_deleted";  // 完了ページにリダイレクト
+        return "userDeleted";  // 完了ページにリダイレクト
     }
 }
