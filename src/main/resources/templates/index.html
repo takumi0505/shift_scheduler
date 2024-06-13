@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/head :: head('シフト作成ホーム')"></head>
+<head th:replace="fragments/head :: head('シフト作成ホーム')">
+    <!-- ビューポートの設定を追加 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
 <body class="bg-gray-100">
 
 <nav th:replace="fragments/nav :: nav"></nav>
 
-<div class="container mx-auto mt-8 px-4">
-    <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">シフト作成ホーム</h1>
-    <div class="flex justify-center space-x-4">
-        <a th:href="@{/user}" class="flex-1 max-w-sm p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition duration-300 ease-in-out">
-            <h2 class="text-xl font-bold text-gray-800 text-center">ユーザー管理</h2>
+<div class="container mx-auto mt-8 px-4 text-center">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">シフト作成ホーム</h1>
+    <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
+
+        <a th:href="@{/shift/request/user_select}" class="flex-1 w-full max-w-sm p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition duration-300 ease-in-out text-center">
+            <h2 class="text-xl font-bold text-gray-800">シフト希望登録</h2>
         </a>
-        <a th:href="@{/shift/request/user_select}" class="flex-1 max-w-sm p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition duration-300 ease-in-out">
-            <h2 class="text-xl font-bold text-gray-800 text-center">シフト希望登録</h2>
+        <a th:href="@{/user}" class="flex-1 w-full max-w-sm p-6 bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300 transition duration-300 ease-in-out text-center">
+            <h2 class="text-xl font-bold text-gray-800">ユーザー管理</h2>
         </a>
-        <a th:href="@{/manager}" class="flex-1 max-w-sm p-6 bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300 transition duration-300 ease-in-out">
-            <h2 class="text-xl font-bold text-gray-800 text-center">管理者ページ</h2>
+        <a th:href="@{/manager}" class="flex-1 w-full max-w-sm p-6 bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300 transition duration-300 ease-in-out text-center">
+            <h2 class="text-xl font-bold text-gray-800">管理者ページ</h2>
         </a>
     </div>
 </div>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
-

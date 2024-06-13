@@ -23,10 +23,12 @@
         <ul class="inline-block text-left">
             <li th:each="user : ${users}" class="text-lg text-gray-700 p-2 bg-white rounded-lg shadow-md mb-2" th:text="${user.name}"></li>
         </ul>
-        <div class="center-btn mt-6">
+        <div class="flex justify-center mt-6">
             <a th:href="@{/}" class="btn">ホームへ戻る</a>
         </div>
     </div>
 </div>
+<footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>

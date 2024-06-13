@@ -26,6 +26,11 @@
             margin-left: 10px;
             font-size: 16px;
         }
+        /* カレンダーの高さを自動に設定 */
+        #calendar {
+            height: auto !important;
+            overflow: visible !important;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -43,10 +48,11 @@
                 initialView: 'dayGridMonth',
                 events: events,
                 locale: 'ja',
+                height: 'auto', // カレンダーの高さを自動に設定
                 headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    left: 'title',
+
+                    right: 'prev,next today'
                 }
             });
 
@@ -116,6 +122,7 @@
     <div id='calendar' class="bg-white p-6 rounded shadow-md mb-4"></div>
     <a th:href="@{/}" class="btn mt-6 ">ホームへ戻る</a>
 </div>
+<footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
 </html>

@@ -21,6 +21,14 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js'></script>
 
+<style>
+    /* カレンダーの高さを自動に設定 */
+    #calendar {
+        height: auto !important;
+        overflow: visible !important;
+    }
+</style>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     document.addEventListener('DOMContentLoaded', function() {
@@ -36,6 +44,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             locale: 'ja',
+            height: 'auto', // カレンダーの高さを自動に設定
             events: events
         });
 
@@ -43,6 +52,7 @@
     });
     /*]]>*/
 </script>
+<footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
 </html>

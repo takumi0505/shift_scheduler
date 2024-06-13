@@ -22,3 +22,16 @@
     display: flex;
     justify-content: center;
 }
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .btn {
+        width: 50%; /* ボタンを全幅にする */
+        padding: -10px 0; /* 上下の余白を調整 */
+        font-size: 15px !important; /* 文字サイズを大きくする */
+    }
+
+    .center-btn {
+        flex-direction: column; /* ボタンを縦に並べる */
+    }
+}

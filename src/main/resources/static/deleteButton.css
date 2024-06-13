@@ -29,3 +29,17 @@
 .delete-btn:hover {
     color: #FF0000; /* ホバー時の色を赤に設定 */
 }
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .fc-event {
+        font-size: 14px !important; /* 文字サイズを小さくする */
+        flex-direction: column; /* イベント内容を縦に並べる */
+    }
+
+    .delete-btn {
+        font-size: 18px;
+        margin-left: 0; /* 左の余白をなくす */
+        margin-top: 5px; /* 上の余白を追加する */
+    }
+}
