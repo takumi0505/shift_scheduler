@@ -30,8 +30,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2'
 	implementation 'com.google.code.gson:gson:2.8.8'
+	runtimeOnly 'org.postgresql:postgresql'  // 新しく追加
 }
 
 tasks.named('test') {
